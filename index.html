@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Инфер должен Вихиксу</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #fff;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 0.5em;
+    }
+    .number {
+      font-size: 4em;
+      font-weight: bold;
+      margin-bottom: 1em;
+    }
+    .timer {
+      font-size: 1.2em;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h1>Инфер должен Вихиксу:</h1>
+  <div class="number" id="number">2</div>
+  <div class="timer" id="timer">До удвоения: ...</div>
+
+  <script>
+    const startTime = new Date("2025-07-26T00:00:00Z");
+    const startValue = 2;
+    const doublingIntervalMs = 7 * 24 * 60 * 60 * 1000;
+
+    function getCurrentValue() {
+      const now = new Date();
+      const elapsedMs = now - startTime;
+
+      const totalWeeks = Math.floor(elapsedMs / doublingIntervalMs);
+      const timeSinceLastDoubling = elapsedMs % doublingIntervalMs;
+
+      const baseValue = startValue * Math.pow(2, totalWeeks);
+      const nextValue = baseValue * 2;
+
+      const progress = timeSinceLastDoubling / doublingIntervalMs;
+      const currentValue = baseValue + (nextValue - baseValue) * progress;
+
+      return currentValue;
+    }
+
+    function getTimeUntilNextDoubling() {
+      const now = new Date();
+      const elapsedMs = now - startTime;
+      const timeToNext = doublingIntervalMs - (elapsedMs % doublingIntervalMs);
+      return timeToNext;
+    }
+
+    function formatTime(ms) {
+      const totalSeconds = Math.floor(ms / 1000);
+      const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+      const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
+      const seconds = String(totalSeconds % 60).padStart(2, "0");
+      return `${hours}:${minutes}:${seconds}`;
+    }
+
+    function update() {
+      const number = document.getElementById("number");
+      const timer = document.getElementById("timer");
+
+      number.textContent = getCurrentValue().toFixed(6);
+      timer.textContent = "До удвоения: " + formatTime(getTimeUntilNextDoubling());
+    }
+
+    setInterval(update, 100);
+    update();
+  </script>
+</body>
+</html>
