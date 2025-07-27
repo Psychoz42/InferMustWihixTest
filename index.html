@@ -40,51 +40,49 @@
   <div class="timer" id="timer">До удвоения: ...</div>
 
   <script>
-    const startTime = new Date("2025-07-26T00:00:00Z");
-    const startValue = 2;
-    const doublingIntervalMs = 7 * 24 * 60 * 60 * 1000;
+  const startTime = new Date("2025-07-26T09:00:00Z");
+  const startValue = 2;
+  const dayMs = 24 * 60 * 60 * 1000;
+  const weekMs = 7 * dayMs;
 
-    function getCurrentValue() {
-      const now = new Date();
-      const elapsedMs = now - startTime;
+  function getCurrentValue() {
+    const now = new Date();
+    const elapsedMs = now - startTime;
 
-      const totalWeeks = Math.floor(elapsedMs / doublingIntervalMs);
-      const timeSinceLastDoubling = elapsedMs % doublingIntervalMs;
+    const fullWeeks = Math.floor(elapsedMs / weekMs);
 
-      const baseValue = startValue * Math.pow(2, totalWeeks);
-      const nextValue = baseValue * 2;
+    const dailyIncrease = elapsedMs / dayMs;
 
-      const progress = timeSinceLastDoubling / doublingIntervalMs;
-      const currentValue = baseValue + (nextValue - baseValue) * progress;
+    const currentValue = (startValue + dailyIncrease) * Math.pow(2, fullWeeks);
 
-      return currentValue;
-    }
+    return currentValue;
+  }
 
-    function getTimeUntilNextDoubling() {
-      const now = new Date();
-      const elapsedMs = now - startTime;
-      const timeToNext = doublingIntervalMs - (elapsedMs % doublingIntervalMs);
-      return timeToNext;
-    }
+  function getTimeUntilNextDoubling() {
+    const now = new Date();
+    const elapsedMs = now - startTime;
+    const timeToNext = weekMs - (elapsedMs % weekMs);
+    return timeToNext;
+  }
 
-    function formatTime(ms) {
-      const totalSeconds = Math.floor(ms / 1000);
-      const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
-      const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
-      const seconds = String(totalSeconds % 60).padStart(2, "0");
-      return `${hours}:${minutes}:${seconds}`;
-    }
+  function formatTime(ms) {
+    const totalSeconds = Math.floor(ms / 1000);
+    const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+    const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
+    const seconds = String(totalSeconds % 60).padStart(2, "0");
+    return `${hours}:${minutes}:${seconds}`;
+  }
 
-    function update() {
-      const number = document.getElementById("number");
-      const timer = document.getElementById("timer");
+  function update() {
+    const number = document.getElementById("number");
+    const timer = document.getElementById("timer");
 
-      number.textContent = getCurrentValue().toFixed(6);
-      timer.textContent = "До удвоения: " + formatTime(getTimeUntilNextDoubling());
-    }
+    number.textContent = getCurrentValue().toFixed(6);
+    timer.textContent = "До удвоения: " + formatTime(getTimeUntilNextDoubling());
+  }
 
-    setInterval(update, 100);
-    update();
-  </script>
+  setInterval(update, 100);
+  update();
+</script>
 </body>
 </html>
